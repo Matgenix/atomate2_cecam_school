@@ -1,0 +1,137 @@
+name: ${PROJECTNAME}
+base_dir: /home/${NB_USER}/.jfremote/${PROJECTNAME}
+log_level: debug
+runner:
+  delay_checkout: 10
+  delay_check_run_status: 10
+  delay_advance_status: 10
+  delay_update_batch: 10
+  max_step_attempts: 3
+  delta_retry:
+  - 10
+  - 20
+  - 30
+
+workers:
+  cecam:
+    scheduler_type: slurm
+    work_dir: /scratch/${REMOTE_USER}/Atomate/jobs/${PROJECTNAME}
+    resources:
+    post_run:
+    timeout_execute: 60
+    type: remote
+    host: helvetios.hpc.epfl.ch
+    user: ${REMOTE_USER}
+    port:
+    password: ${REMOTE_PASSWORD}
+    key_filename:
+    passphrase:
+    gateway: "sshpass -p ${REMOTE_PASSWORD} ssh -W helvetios.hpc.epfl.ch:22 cecam_student@cecamgesrv1.epfl.ch -o 'StrictHostKeyChecking no'"
+    forward_agent:
+    connect_timeout:
+    connect_kwargs:
+      allow_agent: false
+      look_for_keys: false
+  cecam_fe:
+    scheduler_type: shell
+    work_dir: /scratch/${REMOTE_USER}/Atomate/jobs/${PROJECTNAME}
+    resources:
+    post_run:
+    timeout_execute: 60
+    type: remote
+    host: helvetios.hpc.epfl.ch
+    user: ${REMOTE_USER}
+    port:
+    password: ${REMOTE_PASSWORD}
+    key_filename:
+    passphrase:
+    gateway: "sshpass -p ${REMOTE_PASSWORD} ssh -W helvetios.hpc.epfl.ch:22 cecam_student@cecamgesrv1.epfl.ch -o 'StrictHostKeyChecking no'"
+    forward_agent:
+    connect_timeout:
+    connect_kwargs:
+      allow_agent: false
+      look_for_keys: false      
+    max_jobs: 1
+  local_slurm:
+    scheduler_type: slurm
+    work_dir: /home/${SLURM_USERNAME}/jobs
+    resources:
+    pre_run: "source /home/${SLURM_USERNAME}/.venv/bin/activate"
+    post_run:
+    timeout_execute: 60
+    type: remote
+    host: slurm
+    user: ${SLURM_USERNAME}
+    port:
+    password: ${SLURM_USERNAME}
+  local_shell:
+    scheduler_type: shell
+    work_dir: /home/${NB_USER}/jobs
+    pre_run: "export PYTHONPATH=/home/${NB_USER}/develop:$${missing_variable}PYTHONPATH"
+    type: local
+    max_jobs: 2
+
+queue:
+  store:
+    type: MongoStore
+    database: jobflow_remote
+    collection_name: jobs
+    host: mongodb
+    port: 
+    username: ''
+    password: ''
+    ssh_tunnel:
+    safe_update: false
+    auth_source: jobflow_remote
+    mongoclient_kwargs: {}
+    default_sort:
+
+exec_config:
+  vasp_6.4.3_cecam:
+    modules:
+    - releases/2021b
+    - intel/2021b
+    - HDF5/1.12.1-iimpi-2021b
+    export:
+      PATH: /scratch/cecam.school/Atomate/vasp/vasp.6.4.3_gnu/bin:$${missing_variable}PATH
+      atomate2_VASP_CMD: '"srun vasp_std"'
+      atomate2_VASP_GAMMA_CMD: '"srun vasp_gam"'
+      atomate2_VASP_NCL_CMD: '"srun vasp_ncl"'
+      atomate2_VASP_STORE_ADDITIONAL_JSON: 'False'
+      VASP_PSP_DIR: /scratch/cecam.school/Atomate/vasp/potcar_pmg
+    pre_run:
+    post_run:
+
+jobstore:
+  docs_store:
+    type: MongoStore
+    database: jobflow_remote
+    collection_name: outputs
+    host: mongodb
+    port: 
+    username: ''
+    password: ''
+    ssh_tunnel:
+    safe_update: false
+    auth_source: jobflow_remote
+    mongoclient_kwargs: {}
+    default_sort:
+  additional_stores:
+    data:
+      type: GridFSStore
+      database: jobflow_remote
+      collection_name: output_data
+      host: mongodb
+      port: 
+      username: ''
+      password: ''
+      compression: false
+      ensure_metadata: false
+      searchable_fields: []
+      auth_source: jobflow_remote
+      mongoclient_kwargs: {}
+      ssh_tunnel:
+      key: _id
+  save: {}
+  load: false
+metadata:

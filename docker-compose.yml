@@ -1,0 +1,61 @@
+services:
+  slurm:
+    build:
+      context: .
+      dockerfile: slurm/Dockerfile
+      args:
+        USERNAME: ${SLURM_USERNAME:-atomate}
+    ports:
+      - "${SSH_PORT:-2222}:22"
+    volumes:
+      - slurm_data:/home/${SLURM_USERNAME:-atomate}/jobs
+    networks:
+      - atomate_network
+    restart: unless-stopped
+    env_file:
+      - .env     
+
+  jupyter:
+    build:
+      context: .
+      dockerfile: jupyter/Dockerfile
+    ports:
+      - "${JUPYTER_PORT:-8888}:8888"
+      - "${WEB_APP_PORT:-5001}:5001"
+    volumes:
+      - jupyter_data:/home/jovyan/work
+      - ./notebooks:/home/jovyan/notebooks
+      - ./scripts:/home/jovyan/scripts
+      - ./develop:/home/jovyan/develop
+      - ./config:/home/jovyan/config
+    environment:
+      - MONGODB_HOST=mongodb
+      - MONGODB_PORT=${MONGODB_PORT:-27018}
+      - JUPYTER_TOKEN=atomate
+    networks:
+      - atomate_network
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+    env_file:
+      - .env 
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "${MONGODB_PORT:-27018}:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - atomate_network
+    command: mongod --port 27017
+    restart: unless-stopped
+
+networks:
+  atomate_network:
+    driver: bridge
+
+volumes:
+  slurm_data:
+  jupyter_data:
+  mongodb_data:
