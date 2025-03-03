@@ -89,9 +89,10 @@ queue:
 exec_config:
   vasp_6.4.3_cecam:
     modules:
-    - releases/2021b
-    - intel/2021b
-    - HDF5/1.12.1-iimpi-2021b
+    - gcc/11.3.0
+    - openmpi/4.1.3
+    - openblas/0.3.20
+    - fftw/3.3.10
     export:
       PATH: /scratch/cecam.school/Atomate/vasp/vasp.6.4.3_gnu/bin:$${missing_variable}PATH
       atomate2_VASP_CMD: '"srun vasp_std"'
@@ -99,6 +100,7 @@ exec_config:
       atomate2_VASP_NCL_CMD: '"srun vasp_ncl"'
       atomate2_VASP_STORE_ADDITIONAL_JSON: 'False'
       VASP_PSP_DIR: /scratch/cecam.school/Atomate/vasp/potcar_pmg
+      LD_LIBRARY_PATH: /scratch/cecam.school/Atomate/libs/scalapack-2.2.2:$LD_LIBRARY_PATH
     pre_run:
     post_run:
 
