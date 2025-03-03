@@ -120,7 +120,7 @@ The jobflow-remote GUI can be started in the jupyter container running
 ```bash
 jf gui
 ```
-and can be accessed from the local machine connecting to http://localhost:50001 (or your custom `WEB_APP_PORT`).
+and can be accessed from the local machine connecting to http://localhost:5001 (or your custom `WEB_APP_PORT`).
 
 
 ### Notebooks and script
