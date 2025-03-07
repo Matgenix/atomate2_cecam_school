@@ -41,8 +41,8 @@ RUN mkdir -p /home/${USERNAME}/jobs
 # Set up startup script and permissions
 RUN chmod +x /etc/startup.sh && \
     dos2unix /etc/startup.sh
-# RUN chown -R ${USERNAME} /home/${USERNAME} && \
-#     chmod -R 755 /home/${USERNAME}
+RUN chown -R ${USERNAME} /home/${USERNAME} && \
+    chmod -R 755 /home/${USERNAME}
 
 # Create an entrypoint script
 RUN echo '#!/bin/bash\n\

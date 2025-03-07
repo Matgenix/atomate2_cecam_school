@@ -17,4 +17,4 @@ flow = RelaxMaker().make(mgo_structure)
 flow = update_user_incar_settings(flow, {"NCORE": 4, "ISPIN": 1, "ENCUT": 300, "ENAUG": 600, "NSW": 10})
 
 res = {"nodes": 1, "ntasks":4, "time": "00:20:00"}
-submit_flow(flow, worker="cecam", resources=res, exec_config="vasp")
+submit_flow(flow, worker="cecam", resources=res, exec_config="vasp_6.4.3_cecam")

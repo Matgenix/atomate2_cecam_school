@@ -17,6 +17,7 @@ workers:
     scheduler_type: slurm
     work_dir: /scratch/${REMOTE_USER}/Atomate/jobs/${PROJECTNAME}
     resources:
+    pre_run: "\neval \"$(conda shell.bash hook)\"\nconda activate atomate\n"
     post_run:
     timeout_execute: 60
     type: remote
@@ -36,6 +37,7 @@ workers:
     scheduler_type: shell
     work_dir: /scratch/${REMOTE_USER}/Atomate/jobs/${PROJECTNAME}
     resources:
+    pre_run: "\neval \"$(conda shell.bash hook)\"\nconda activate atomate\n"
     post_run:
     timeout_execute: 60
     type: remote

@@ -26,6 +26,9 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 USER ${NB_UID}
 
+# install pytorch separately to avoid installing nvidia dependence.
+RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+
 # Install atomate2 and jobflow-remote in the base python environment
 RUN pip install --no-cache-dir \
     "atomate2[phonons,lobster,forcefields]" \
