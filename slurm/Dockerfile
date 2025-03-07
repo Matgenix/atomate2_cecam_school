@@ -36,19 +36,13 @@ RUN printf "${USERNAME} ALL=(root:root) NOPASSWD: /etc/startup.sh\n" >> /etc/sud
     && chmod 0440 /etc/sudoers.d/startup \
     && visudo -c
 
-# Create a Python virtual environment and install the required packages
-WORKDIR /home/${USERNAME}
-RUN python3 -m venv /home/${USERNAME}/.venv && \
-    /home/${USERNAME}/.venv/bin/pip install --upgrade pip && \
-    /home/${USERNAME}/.venv/bin/pip install atomate2[phonons,lobster,forcefields] jobflow-remote[gui]
-
 RUN mkdir -p /home/${USERNAME}/jobs
 
 # Set up startup script and permissions
 RUN chmod +x /etc/startup.sh && \
     dos2unix /etc/startup.sh
-RUN chown -R ${USERNAME} /home/${USERNAME} && \
-    chmod -R 755 /home/${USERNAME}
+# RUN chown -R ${USERNAME} /home/${USERNAME} && \
+#     chmod -R 755 /home/${USERNAME}
 
 # Create an entrypoint script
 RUN echo '#!/bin/bash\n\
@@ -58,5 +52,13 @@ tail -f /dev/null\n' > /entrypoint.sh && \
 chmod +x /entrypoint.sh
 
 USER ${USERNAME}
+
+# Create a Python virtual environment and install the required packages
+WORKDIR /home/${USERNAME}
+RUN python3 -m venv /home/${USERNAME}/.venv && \
+    /home/${USERNAME}/.venv/bin/pip install --no-cache-dir --upgrade pip && \
+    /home/${USERNAME}/.venv/bin/pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu && \
+    /home/${USERNAME}/.venv/bin/pip install --no-cache-dir atomate2[phonons,lobster,forcefields] jobflow-remote[gui]
+
 
 ENTRYPOINT ["/entrypoint.sh"]
