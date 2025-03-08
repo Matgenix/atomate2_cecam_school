@@ -100,6 +100,7 @@ exec_config:
       atomate2_VASP_CMD: '"srun vasp_std"'
       atomate2_VASP_GAMMA_CMD: '"srun vasp_gam"'
       atomate2_VASP_NCL_CMD: '"srun vasp_ncl"'
+      atomate2_LOBSTER_CMD: '"OMP_NUM_THREADS=36 /scratch/cecam.school/Atomate/lobster/lobster511"'
       atomate2_VASP_STORE_ADDITIONAL_JSON: 'False'
       VASP_PSP_DIR: /scratch/cecam.school/Atomate/vasp/potcar_pmg
       LD_LIBRARY_PATH: /scratch/cecam.school/Atomate/libs/scalapack-2.2.2:$${missing_variable}LD_LIBRARY_PATH
