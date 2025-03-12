@@ -19,6 +19,8 @@ services:
     build:
       context: .
       dockerfile: jupyter/Dockerfile
+      args:
+        CREATE_AUTOPLEX_ENV: ${CREATE_AUTOPLEX_ENV:-false}
     ports:
       - "${JUPYTER_PORT:-8888}:8888"
       - "${WEB_APP_PORT:-5001}:5001"
