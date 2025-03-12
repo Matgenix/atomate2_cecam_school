@@ -16,7 +16,7 @@ envsubst < "/tmp/jfremote_template.yaml" > "${HOME}/.jfremote/${PROJECTNAME}.yam
 # Prepare the work folder
 # Sync the notebooks folder
 SYNC_MODE=${SYNC_MODE:-"--ignore-existing"}
-rsync -a $SYNC_MODE /tmp/notebooks ${HOME}/work/
+rsync -a $SYNC_MODE --no-group /tmp/notebooks ${HOME}/work/
 mkdir -p ${HOME}/work/develop
 
 exec "$@"

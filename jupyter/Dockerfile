@@ -1,6 +1,12 @@
 FROM quay.io/jupyter/scipy-notebook:latest
 
+ARG NB_UID=1001
+ARG NB_GID=1001
+
 USER root
+
+RUN usermod -u $NB_UID jovyan && groupmod -g $NB_GID users \
+    && chown -R jovyan:users /home/jovyan
 
 # Install required packages
 RUN apt-get update && \
