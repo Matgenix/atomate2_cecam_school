@@ -27,10 +27,8 @@ This Docker Compose setup provides three integrated containers:
 │   └── jfremote_template.yaml
 ├── notebooks/
 │   └── (jupyter notebooks for the hands on sessions)
-├── scripts/
-│   └── (python scripts for the hands on sessions)
-└── develop/
-    └── (location for developing simple small jobs/flows)
+└── shared/
+    └── (folder mounted inside the jupyter container)
 ```
 
 ## Configuration
@@ -114,6 +112,17 @@ on the database.
 It may be instructive to explore the content of the database with a GUI like
 [MongoDB Compass](https://www.mongodb.com/products/tools/compass).
 
+#### Volumes
+
+To ensure data persistence across container restarts, the following volumes are mounted:
+
+* JupyterLab (`jupyter_data`):  Stores data in `/home/jovyan/work`. Useful
+  files are copied in this folder at container startup.
+* SLURM (`slurm_data`): Holds job execution data in `/home/${SLURM_USERNAME:-atomate}/jobs`.
+* MongoDB (`mongodb_data`): Persists database records in `/data/db`.
+
+These volumes allow workflows and job results to be retained even if the containers are stopped or rebuilt.
+
 #### Jobflow-remote GUI
 
 The jobflow-remote GUI can be started in the jupyter container running
@@ -123,14 +132,17 @@ jf gui
 and can be accessed from the local machine connecting to http://localhost:5001 (or your custom `WEB_APP_PORT`).
 
 
-### Notebooks and script
+### Notebooks
 
-The local folders `notebooks` and `scripts` are mounted in the jupyter container, so that all their
-content will be readily available.
+The local folder `notebooks` is copied in the jupyter container in the `~/work` folder. 
+
+> [!WARNING]
+> Switching on and off the containers will not overwrite the content of the `~/work/notebooks` folder,
+> but deleting the `jupyter_data` volume associated will delete the files there.
 
 ### Develop folder
 
-The `develop` folder is mounted in the container and added to the `PYTHONPATH` in the jobflow-remote
+The `~/work/develop` folder in the jupyter container is added to the `PYTHONPATH` in the jobflow-remote
 configuration, so that it can be used to store newly developed workflows that can be recognised from the
 `local_shell` worker.
 
@@ -144,3 +156,6 @@ To remove all data volumes:
 ```bash
 docker-compose down -v
 ```
+
+> [!CAUTION]
+> This will delete all the notebooks, job files and DB content in the containers.

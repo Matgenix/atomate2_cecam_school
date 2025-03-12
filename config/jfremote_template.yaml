@@ -69,7 +69,7 @@ workers:
   local_shell:
     scheduler_type: shell
     work_dir: /home/${NB_USER}/jobs
-    pre_run: "export PYTHONPATH=/home/${NB_USER}/develop:$${missing_variable}PYTHONPATH"
+    pre_run: "export PYTHONPATH=/home/${NB_USER}/work/develop:$${missing_variable}PYTHONPATH"
     type: local
     max_jobs: 2
 

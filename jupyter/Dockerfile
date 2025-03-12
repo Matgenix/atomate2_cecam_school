@@ -15,6 +15,7 @@ RUN apt-get update && \
         libhdf5-dev \
         gettext-base \
         sshpass \
+        rsync \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
