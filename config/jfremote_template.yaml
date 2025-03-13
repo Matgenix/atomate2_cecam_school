@@ -33,6 +33,26 @@ workers:
     connect_kwargs:
       allow_agent: false
       look_for_keys: false
+  cecam_autoplex:
+    scheduler_type: slurm
+    work_dir: /scratch/${REMOTE_USER}/Atomate/jobs/${PROJECTNAME}
+    resources:
+    pre_run: "\neval \"$(conda shell.bash hook)\"\nconda activate autoplex\n"
+    post_run:
+    timeout_execute: 60
+    type: remote
+    host: helvetios.hpc.epfl.ch
+    user: ${REMOTE_USER}
+    port:
+    password: ${REMOTE_PASSWORD}
+    key_filename:
+    passphrase:
+    gateway: "sshpass -p ${REMOTE_PASSWORD} ssh -W helvetios.hpc.epfl.ch:22 cecam_student@cecamgesrv1.epfl.ch -o 'StrictHostKeyChecking no'"
+    forward_agent:
+    connect_timeout:
+    connect_kwargs:
+      allow_agent: false
+      look_for_keys: false
   cecam_fe:
     scheduler_type: shell
     work_dir: /scratch/${REMOTE_USER}/Atomate/jobs/${PROJECTNAME}
