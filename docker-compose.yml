@@ -24,10 +24,8 @@ services:
       - "${WEB_APP_PORT:-5001}:5001"
     volumes:
       - jupyter_data:/home/jovyan/work
-      - ./notebooks:/home/jovyan/notebooks
-      - ./scripts:/home/jovyan/scripts
-      - ./develop:/home/jovyan/develop
-      - ./config:/home/jovyan/config
+      - ./shared:/home/jovyan/shared
+      - ./notebooks:/tmp/notebooks
     environment:
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=${MONGODB_PORT:-27018}
