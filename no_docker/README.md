@@ -53,6 +53,14 @@ using miniconda, which is a minimal Conda installer. To install:
   conda activate atomate
   ```
 
+Due to compatiblity issues among the different python packages, an additional conda environment
+needs to be created in order to properly perform the tutorials on the [autoplex](https://autoatml.github.io/autoplex/index.html) package. To do this run:
+
+```bash
+  conda create -n autoplex python=3.11
+  conda activate autoplex
+```
+
 #### Option 2: Using Virtualenv
 
 If you prefer virtual environments with `venv`:
@@ -65,17 +73,30 @@ If you prefer virtual environments with `venv`:
   atomate\Scripts\activate  # On Windows
   ```
 
+  ```bash
+  python -m venv autoplex
+  source autoplex/bin/activate  # On macOS/Linux
+  autoplex\Scripts\activate  # On Windows
+  ```
+
 ### 3. Installing Required Packages
 
-Once your environment is activated, install the required Python packages:
+Once your `atomate` environment is activated, install the required Python packages:
 
 ```bash
 pip install jupyterlab atomate2[phonons,lobster,forcefields] jobflow-remote[gui]
 ```
 
+Similarly, for the `autoplex` environment:
+
+```bash
+pip install --no-cache-dir jupyterlab && pip install --no-cache-dir torch==2.2.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu && \
+pip install --no-cache-dir quippy-ase==0.9.14 autoplex[strict] jobflow-remote[gui]
+```
+
 ### 4. Running JupyterLab
 
-To start JupyterLab, simply run:
+To start JupyterLab, in respective environment simply run:
 
 ```bash
 jupyter lab
