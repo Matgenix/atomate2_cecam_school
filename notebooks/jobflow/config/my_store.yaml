@@ -1,0 +1,31 @@
+docs_store:
+  type: MongoStore
+  database: jobflow_handson
+  collection_name: outputs
+  host: mongodb
+  port: 
+  username: ''
+  password: ''
+  ssh_tunnel:
+  safe_update: false
+  auth_source: jobflow_remote
+  mongoclient_kwargs: {}
+  default_sort:
+additional_stores:
+  data:
+    type: GridFSStore
+    database: jobflow_handson
+    collection_name: output_data
+    host: mongodb
+    port: 
+    username: ''
+    password: ''
+    compression: false
+    ensure_metadata: false
+    searchable_fields: []
+    auth_source: jobflow_remote
+    mongoclient_kwargs: {}
+    ssh_tunnel:
+    key: _id
+save: {}
+load: false
