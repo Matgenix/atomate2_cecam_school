@@ -48,7 +48,14 @@ use the containers and the HPC cluster available during the hands-on sessions. O
 > the `PROJECTNAME` variable is mandatory.
 
 Some of the usernames and ports can be configured in the `.env` file, in case the default values
-clash with some of your local services. 
+clash with some of your local services.
+
+### Autoplex environment
+
+Due to compatiblity issues among the different python packages, an additional conda environment
+in the jupyter container can optionally be created in order to properly perform the tutorials on
+the [autoplex](https://autoatml.github.io/autoplex/index.html) package. To do this set
+`CREATE_AUTOPLEX_ENV=true` in the `.env` before building the container.
 
 ## Usage
 
