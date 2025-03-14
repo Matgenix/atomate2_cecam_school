@@ -35,7 +35,8 @@ RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://
 # Install atomate2 and jobflow-remote in the base python environment
 RUN pip install --no-cache-dir \
     "atomate2[phonons,lobster,forcefields]" \
-    "jobflow-remote[gui]"
+    "jobflow-remote[gui]" \
+    "pymatviz"
 
 # Optionally create an additional environment with autoplex
 RUN if [ "$CREATE_AUTOPLEX_ENV" = "true" ]; then \
