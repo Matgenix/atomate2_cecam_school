@@ -44,9 +44,10 @@ RUN if [ "$CREATE_AUTOPLEX_ENV" = "true" ]; then \
     conda activate autoplex && \
     pip install --no-cache-dir torch==2.2.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu && \
     pip install --no-cache-dir quippy-ase==0.9.14 autoplex[strict] jobflow-remote && \
-    conda deactivate && \
+    pip install ipykernel && \
     # Register the environment as a Jupyter kernel
-    python -m ipykernel install --user --name=autoplex --display-name="autoplex"; \
+    python -m ipykernel install --user --name=autoplex --display-name="autoplex" && \
+    conda deactivate; \
 fi
 
 WORKDIR "${HOME}"
