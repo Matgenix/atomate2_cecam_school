@@ -1,0 +1,137 @@
+name: ${PROJECTNAME}
+log_level: debug
+runner:
+  delay_checkout: 10
+  delay_check_run_status: 10
+  delay_advance_status: 10
+  delay_update_batch: 10
+  max_step_attempts: 3
+  delta_retry:
+  - 10
+  - 20
+  - 30
+
+workers:
+  cecam:
+    scheduler_type: slurm
+    work_dir: /scratch/${REMOTE_USER}/Atomate/jobs/${PROJECTNAME}
+    resources:
+    pre_run: "\neval \"$(conda shell.bash hook)\"\nconda activate atomate\n"
+    post_run:
+    timeout_execute: 60
+    type: remote
+    host: helvetios.hpc.epfl.ch
+    user: ${REMOTE_USER}
+    port:
+    password: ${REMOTE_PASSWORD}
+    key_filename:
+    passphrase:
+    gateway: "sshpass -p ${REMOTE_PASSWORD} ssh -W helvetios.hpc.epfl.ch:22 cecam_student@cecamgesrv1.epfl.ch -o 'StrictHostKeyChecking no'  -o PasswordAuthentication=yes -o PubkeyAuthentication=no"
+    forward_agent:
+    connect_timeout:
+    connect_kwargs:
+      allow_agent: false
+      look_for_keys: false
+  cecam_fe:
+    scheduler_type: shell
+    work_dir: /scratch/${REMOTE_USER}/Atomate/jobs/${PROJECTNAME}
+    resources:
+    pre_run: "\neval \"$(conda shell.bash hook)\"\nconda activate atomate\n"
+    post_run:
+    timeout_execute: 60
+    type: remote
+    host: helvetios.hpc.epfl.ch
+    user: ${REMOTE_USER}
+    port:
+    password: ${REMOTE_PASSWORD}
+    key_filename:
+    passphrase:
+    gateway: "sshpass -p ${REMOTE_PASSWORD} ssh -W helvetios.hpc.epfl.ch:22 cecam_student@cecamgesrv1.epfl.ch -o 'StrictHostKeyChecking no' -o PasswordAuthentication=yes -o PubkeyAuthentication=no"
+    forward_agent:
+    connect_timeout:
+    connect_kwargs:
+      allow_agent: false
+      look_for_keys: false      
+    max_jobs: 1
+  local_shell:
+    scheduler_type: shell
+    work_dir: ${LOCAL_WORK_DIR}
+    # pre_run: "export PYTHONPATH=${DEVELOP_FULL_PATH}:$PYTHONPATH"
+    type: local
+    max_jobs: 2
+
+queue:
+  store:
+    # REMOVE ONE OF THE TWO SECTIONS BELOW DEPENDING ON MONGODB SETUP
+    # ==== LOCAL MONGODB ====
+    type: MongoStore
+    database: jobflow_remote
+    collection_name: jobs
+    host: localhost
+    port: 
+    username: '' # set username and password if required
+    password: ''
+    auth_source: jobflow_remote
+    # ==== ATLAS MONGODB ====
+    type: MongoURIStore
+    uri:  mongodb+srv://<db_username>:<db_password>@cluster0.... # SET THE CONNECTION STRING
+    database: jobflow_remote
+    collection_name: jobs
+
+
+exec_config:
+  vasp_6.4.3_cecam:
+    modules:
+    - gcc/11.3.0
+    - openmpi/4.1.3
+    - openblas/0.3.20
+    - fftw/3.3.10
+    export:
+      PATH: /scratch/cecam.school/Atomate/vasp/vasp.6.4.3_gnu/bin:$PATH
+      atomate2_VASP_CMD: '"srun vasp_std"'
+      atomate2_VASP_GAMMA_CMD: '"srun vasp_gam"'
+      atomate2_VASP_NCL_CMD: '"srun vasp_ncl"'
+      atomate2_VASP_STORE_ADDITIONAL_JSON: 'False'
+      VASP_PSP_DIR: /scratch/cecam.school/Atomate/vasp/potcar_pmg
+      LD_LIBRARY_PATH: /scratch/cecam.school/Atomate/libs/scalapack-2.2.2:$LD_LIBRARY_PATH
+    pre_run:
+    post_run:
+
+jobstore:
+  docs_store:
+    # REMOVE ONE OF THE TWO SECTIONS BELOW DEPENDING ON MONGODB SETUP
+    # ==== LOCAL MONGODB ====
+    type: MongoStore
+    database: jobflow_remote
+    collection_name: outputs
+    host: localhost
+    port: 
+    username: '' # set username and password if required
+    password: ''
+    auth_source: jobflow_remote
+    # ==== ATLAS MONGODB ====
+    type: MongoURIStore
+    uri:  mongodb+srv://<db_username>:<db_password>@cluster0.... # SET THE CONNECTION STRING
+    database: jobflow_remote
+    collection_name: outputs
+
+  additional_stores:
+    data:
+      # REMOVE ONE OF THE TWO SECTIONS BELOW DEPENDING ON MONGODB SETUP
+      # ==== LOCAL MONGODB ====
+      type: GridFSStore
+      database: jobflow_remote
+      collection_name: output_data
+      host: localhost
+      port: 
+      username: '' # set username and password if required
+      password: ''
+      auth_source: jobflow_remote
+      # ==== ATLAS MONGODB ====
+      type: GridFSURIStore
+      uri:  mongodb+srv://<db_username>:<db_password>@cluster0.... # SET THE CONNECTION STRING
+      database: jobflow_remote
+      collection_name: output_data
+
+  save: {}
+  load: false
