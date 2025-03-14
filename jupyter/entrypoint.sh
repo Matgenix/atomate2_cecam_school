@@ -13,4 +13,10 @@ mkdir -p "${HOME}/.jfremote"
 # Replace environment variables in the template
 envsubst < "/tmp/jfremote_template.yaml" > "${HOME}/.jfremote/${PROJECTNAME}.yaml"
 
+# Prepare the work folder
+# Sync the notebooks folder
+SYNC_MODE=${SYNC_MODE:-"--ignore-existing"}
+rsync -a $SYNC_MODE /tmp/notebooks ${HOME}/work/
+mkdir -p ${HOME}/work/develop
+
 exec "$@"
