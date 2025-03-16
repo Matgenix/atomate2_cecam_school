@@ -4,6 +4,8 @@ ARG CREATE_AUTOPLEX_ENV=false
 
 USER root
 
+RUN usermod -a -G root $NB_USER
+
 # Install required packages
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
